@@ -83,7 +83,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .padding(24.dp)
     ) {
-        CounterDemo()
+        //CounterDemo()
         // --- Lab 6: Task 1: Make the screen properly yours ---
         Text(
             text = "Movie List",
@@ -98,6 +98,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             text = "Movies I have watched",
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        // --- Lab 7: Task 2: singular or plural ---
+        Text(
+            text = if (movies.size == 1) "1 trail" else "${movies.size} movies",
+            fontWeight = FontWeight.Bold
         )
 
         // --- Lab 6: Task 3: a picture of my own ---
@@ -120,6 +126,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth()
         )
 
+        // --- Lab 7: Task 4: a live character counter ---
+        Text(
+            text = "${newMovie.length} / 40",
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
         // --- Class 7: Step 4: the button that changes the state ---
         Button(onClick = {
             movies.add(newMovie)
@@ -130,6 +143,21 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        // --- Lab 7: Task 1: A remove last button ---
+        Button(onClick = {
+            if (movies.isNotEmpty()) {
+                movies.removeAt(movies.lastIndex)
+            }
+        }) {
+            Text("Remove last")
+        }
+
+        // --- Lab 7: Task 3: clear all ---
+        Button(onClick = {
+            movies.clear()
+        }) {
+            Text("Clear movies")
+        }
 
 
         // --- Class 7: Step 3: draw whatever is in the list---
