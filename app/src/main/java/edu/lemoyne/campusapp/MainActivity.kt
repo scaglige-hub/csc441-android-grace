@@ -76,6 +76,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
     // --- Class 7: Step 3: what is typed lives in state---
     var newMovie by remember { mutableStateOf("") }
+    //---Class 8: Step 2: the error message lives in state too ---
+    var error by remember { mutableStateOf<String?>(null) }
 
     //--- Class 6: Step 3: a column so things stack ---
     Column(
@@ -121,10 +123,24 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         // --- Class 7: Step 3: the text field ---
         OutlinedTextField(
             value = newMovie,
-            onValueChange = {newMovie = it},
+            // --- Class 8: Step 3: the field itself pushes back ---
+            onValueChange = {
+                newMovie = it.take(n = MAX_NAME_LENGTH)
+                error = null
+            },
             label = {Text("Movie Name")},
+            singleLine = true,
+            isError = error != null,
             modifier = Modifier.fillMaxWidth()
         )
+
+        error?.let {
+            Text(
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 14.sp
+            )
+        }
 
         // --- Lab 7: Task 4: a live character counter ---
         Text(
@@ -135,9 +151,18 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
         // --- Class 7: Step 4: the button that changes the state ---
         Button(onClick = {
-            movies.add(newMovie)
-            newMovie = ""
-        }) {
+            //--- Class 8: Step 3: check before you add  ---
+            val problem = validateMovieName(input= newMovie, existingMovies = movies)
+            if (problem == null) {
+                movies.add(newMovie)
+                newMovie = ""
+            } else {
+                error = problem
+            }
+        },
+            // --- Class 8: Step 4: the sign on the door, not the lock ---
+            enabled = newMovie.isNotBlank()
+            ) {
             Text("Add movie")
         }
 
@@ -182,6 +207,20 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
 
     }
+}
+
+const val MAX_NAME_LENGTH = 40
+
+// --- Class 8: Step 1: one rule book for movie names ---
+fun validateMovieName(input: String, existingMovies: List<String>): String? {
+    val name = input.trim()
+    return when {
+        name.isEmpty() -> "Enter a movie name"
+        name.length > MAX_NAME_LENGTH -> "Keep it to $MAX_NAME_LENGTH characters or fewer"
+        existingMovies.any { it.equals(other = name, ignoreCase = true)} -> "$name is already on the list"
+        else -> null
+    }
+
 }
 
 @Preview
