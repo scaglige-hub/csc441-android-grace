@@ -200,7 +200,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Last updated Septempber 2026",
+            text = "Last updated September 2026",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -216,8 +216,12 @@ fun validateMovieName(input: String, existingMovies: List<String>): String? {
     val name = input.trim()
     return when {
         name.isEmpty() -> "Enter a movie name"
+        // --- Lab 8: Task 1: minimum length ---
+        name.length < 3 -> "Too short -- at least 3 characters"
         name.length > MAX_NAME_LENGTH -> "Keep it to $MAX_NAME_LENGTH characters or fewer"
         existingMovies.any { it.equals(other = name, ignoreCase = true)} -> "$name is already on the list"
+        // --- Lab 8: Task 2: my own rule ---
+        name.any {it in "<>"} -> "No < or > please"
         else -> null
     }
 
