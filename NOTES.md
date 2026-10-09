@@ -26,3 +26,9 @@ have to use them.
 | I added "1234" | It added 1234 to the movie list | yes |
 | I added "The Good The Bad and the Ugly" | It added "Finding Nemo" to the movie list | yes |
 | I added 2 characters | I got the "Too short -- at least 3 characters" error message | yes |
+
+
+## Week 7, Wednesday
+1. After rotating, I was on the See All screen, which is what I started on.
+2. The two new items I added were not there.
+3. The difference is the use of 'remember' and 'rememberSavable'. Seemingly, rememberSavable saves the list when the screen rotates.
