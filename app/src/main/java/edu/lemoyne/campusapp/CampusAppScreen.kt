@@ -60,10 +60,17 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
         "home" -> HomeScreen(
             movies = movies,
             onAddMovie = {movies.add(it)},
-            onSeeAll = {currentScreen = "list"}
+            onSeeAll = {currentScreen = "list"},
+            //--- Lab 9: Task 2: an about screen
+            onAbout = { currentScreen = "about" }
         )
-        "List" -> ListScreen(
+        "list" -> ListScreen(
             movies = movies,
+            onBack = {currentScreen = "home"},
+            modifier = modifier
+        )
+        //--- Lab 9: Task 2: An about screen ---
+        "about" -> AboutScreen(
             onBack = {currentScreen = "home"},
             modifier = modifier
         )
@@ -77,6 +84,8 @@ fun HomeScreen(
     movies: MutableList<String>,
     onAddMovie: (String) -> Unit,
     onSeeAll: () -> Unit,
+    //--- Lab 9: Task 2: An about screen ---
+    onAbout: () -> Unit,
     modifier: Modifier = Modifier) {
     // --- Class 7: Step 3: what is typed lives in state---
     var newMovie by remember { mutableStateOf("") }
@@ -189,6 +198,13 @@ fun HomeScreen(
             Text(text = "See all movies")
         }
 
+        // --- Lab 9: Task 2: An about screen ---
+        Button(
+            onClick = onAbout
+        ) {
+            Text(text = "About")
+        }
+
 
         // --- Lab 6: Task 2: footer
         Spacer(modifier = Modifier.height(24.dp))
@@ -228,6 +244,12 @@ fun ListScreen(
             fontSize = 28.sp
         )
 
+        // --- Lab 9: Task 1: count on the list screen ---
+        Text(
+            text = "${movies.size} movies",
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         for (movie in movies) {
@@ -235,6 +257,38 @@ fun ListScreen(
         }
     }
 
+}
+
+// --- Lab 9: Task 2: a third screen ---
+@Composable
+fun AboutScreen(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    BackHandler { onBack()}
+
+    Column(
+        modifier = modifier.fillMaxWidth().padding(24.dp)
+    ) {
+        TextButton(onClick = onBack) {
+            Text("Back")
+        }
+
+        Text(
+            text = "About",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "Movie List keep track of the movies I've watched.")
+        Text(text = "Built for CSC 441 by Grace Scaglione.")
+        Text(text = "This app is made to help me learn Kotlin.")
+        Text(text = "The inspiration for this app came from the movie nights I have with my roommates.")
+
+
+    }
 }
 
 const val MAX_NAME_LENGTH = 40
@@ -264,7 +318,9 @@ fun HomeScreenPreview() {
                 mutableStateListOf("")
             },
             onAddMovie = {},
-            onSeeAll = {}
+            onSeeAll = {},
+            // --- Lab 9: Task 2: An about screen ---
+            onAbout = {}
         )
     }
 }
@@ -284,7 +340,9 @@ fun HomeScreenDarkPreview() {
                         "Revenge of the Sith")
                 },
                 onAddMovie = {},
-                onSeeAll = {}
+                onSeeAll = {},
+                // --- Lab 9: Task 2: An about screen ---
+                onAbout = {}
             )
         }
     }
