@@ -241,7 +241,7 @@ fun ListScreen(
     modifier: Modifier = Modifier
 ) {
     //--- Class 9: Step 5: the phones back button goes home too ---
-    BackHandler() {onBack }
+    BackHandler {onBack() }
 
     Column(
         modifier = modifier
@@ -443,6 +443,16 @@ fun ListScreenEmptyPreview() {
             onBack = {},
             onRemove = {},
             onRemoveAll = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AboutScreenPreview() {
+    CampusAppTheme() {
+        AboutScreen(
+            onBack = {}
         )
     }
 }
