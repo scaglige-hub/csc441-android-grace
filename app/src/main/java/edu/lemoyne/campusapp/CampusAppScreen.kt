@@ -78,6 +78,7 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onBack = {currentScreen = "home"},
             // --- Class 10: Step 4: only the owner changes the list
             onRemove = {movies.remove(it)},
+            onRemoveAll = {movies.clear()},
             modifier = modifier
         )
         //--- Lab 9: Task 2: An about screen ---
@@ -236,6 +237,7 @@ fun ListScreen(
     movies: List<String>,
     onBack: () -> Unit,
     onRemove: (String) -> Unit,
+    onRemoveAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     //--- Class 9: Step 5: the phones back button goes home too ---
@@ -264,12 +266,23 @@ fun ListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // --- Lab 10: Task 2: remove all, through the owner ---
+        if (movies.isNotEmpty()) {
+            TextButton(onClick = onRemoveAll) {
+                Text("Remove All")
+            }
+        }
+
         // --- Class 10: Step 5: the empty case ---
         if (movies.isEmpty()) {
             Text(
                 text = "No movies yet. Add one on the home screen.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            // --- Lab 10: Task 1: a way out of the empty screen ---
+            Button(onClick = onBack) {
+                Text("Back Home")
+            }
         } else {
             // --- Class 10: Step 2: a list that scrolls ---
             LazyColumn(
@@ -414,7 +427,8 @@ fun ListScreenPreview() {
                     "Revenge of the Sith")
             },
             onBack = {},
-            onRemove = {}
+            onRemove = {},
+            onRemoveAll = {}
         )
     }
 }
@@ -427,7 +441,8 @@ fun ListScreenEmptyPreview() {
         ListScreen(
             movies = emptyList(),
             onBack = {},
-            onRemove = {}
+            onRemove = {},
+            onRemoveAll = {}
         )
     }
 }
