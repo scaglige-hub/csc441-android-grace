@@ -3,12 +3,18 @@ package edu.lemoyne.campusapp
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -21,6 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -50,7 +58,8 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             "Cinderella Man",
             "Die Hard",
             "2001: A Space Odyssey",
-            "Revenge of the Sith"
+            "Revenge of the Sith",
+            "The Good, the Bad, and the Ugly"
         )
     }
     // --- Class 9: Step 4: which screen is showing is just state ---
@@ -67,6 +76,9 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
         "list" -> ListScreen(
             movies = movies,
             onBack = {currentScreen = "home"},
+            // --- Class 10: Step 4: only the owner changes the list
+            onRemove = {movies.remove(it)},
+            onRemoveAll = {movies.clear()},
             modifier = modifier
         )
         //--- Lab 9: Task 2: An about screen ---
@@ -224,6 +236,8 @@ fun HomeScreen(
 fun ListScreen(
     movies: List<String>,
     onBack: () -> Unit,
+    onRemove: (String) -> Unit,
+    onRemoveAll: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     //--- Class 9: Step 5: the phones back button goes home too ---
@@ -231,7 +245,7 @@ fun ListScreen(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(24.dp)
     ) {
         TextButton(onClick = onBack) {
@@ -252,11 +266,63 @@ fun ListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        for (movie in movies) {
-            Text(text = movie, fontSize = 18.sp)
+        // --- Lab 10: Task 2: remove all, through the owner ---
+        if (movies.isNotEmpty()) {
+            TextButton(onClick = onRemoveAll) {
+                Text("Remove All")
+            }
         }
+
+        // --- Class 10: Step 5: the empty case ---
+        if (movies.isEmpty()) {
+            Text(
+                text = "No movies yet. Add one on the home screen.",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            // --- Lab 10: Task 1: a way out of the empty screen ---
+            Button(onClick = onBack) {
+                Text("Back Home")
+            }
+        } else {
+            // --- Class 10: Step 2: a list that scrolls ---
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(movies) { movie ->
+                    MovieRow(
+                        name = movie,
+                        onRemove = { onRemove(movie) }
+                    )
+                }
+            }
+        }
+
     }
 
+}
+
+// --- Class 10: Step 3: one row, as its own Composable ---
+@Composable
+fun MovieRow(
+    name: String,
+    onRemove: () -> Unit
+) {
+    // -- Class 10: Step 4: a remove button on every row ---
+    TextButton(onClick = onRemove) {
+        Text("Remove")
+    }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = name,
+                fontSize = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
 }
 
 // --- Lab 9: Task 2: a third screen ---
@@ -360,7 +426,23 @@ fun ListScreenPreview() {
                     "2001: A Space Odyssey",
                     "Revenge of the Sith")
             },
-            onBack = {}
+            onBack = {},
+            onRemove = {},
+            onRemoveAll = {}
+        )
+    }
+}
+
+// --- Class 10: Step 5: preview the empty case too ---
+@Preview(showBackground = true)
+@Composable
+fun ListScreenEmptyPreview() {
+    CampusAppTheme() {
+        ListScreen(
+            movies = emptyList(),
+            onBack = {},
+            onRemove = {},
+            onRemoveAll = {}
         )
     }
 }
