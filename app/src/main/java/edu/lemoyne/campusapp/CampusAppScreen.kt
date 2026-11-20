@@ -71,7 +71,8 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onAddMovie = {movies.add(it)},
             onSeeAll = {currentScreen = "list"},
             //--- Lab 9: Task 2: an about screen
-            onAbout = { currentScreen = "about" }
+            onAbout = { currentScreen = "about" },
+            onSupabase = {currentScreen = "supabase"}
         )
         "list" -> ListScreen(
             movies = movies,
@@ -83,6 +84,10 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
         )
         //--- Lab 9: Task 2: An about screen ---
         "about" -> AboutScreen(
+            onBack = {currentScreen = "home"},
+            modifier = modifier
+        )
+        "supabase" -> InterestsScreen(
             onBack = {currentScreen = "home"},
             modifier = modifier
         )
@@ -98,6 +103,7 @@ fun HomeScreen(
     onSeeAll: () -> Unit,
     //--- Lab 9: Task 2: An about screen ---
     onAbout: () -> Unit,
+    onSupabase: () -> Unit = {},
     modifier: Modifier = Modifier) {
     // --- Class 7: Step 3: what is typed lives in state---
     var newMovie by remember { mutableStateOf("") }
@@ -215,6 +221,12 @@ fun HomeScreen(
             onClick = onAbout
         ) {
             Text(text = "About")
+        }
+
+        Button(
+            onClick = onSupabase
+        ) {
+            Text("Open Supabase")
         }
 
 

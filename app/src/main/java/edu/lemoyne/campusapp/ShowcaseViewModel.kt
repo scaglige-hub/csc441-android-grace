@@ -17,8 +17,17 @@ class ShowcaseViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow<ShowcaseUIState>(ShowcaseUIState.Loading)
     val uiState: StateFlow<ShowcaseUIState> = _uiState
+    private var accessToken: String? = null
+
+    fun setAccessToken(token: String) {
+        accessToken = token
+    }
 
     fun refresh() {
+        val token = accessToken?: run {
+            _uiState.value = ShowcaseUIState.Error("Please log in first")
+            return@run
+        }
         viewModelScope.launch {
             _uiState.value = ShowcaseUIState.Loading
             try {
