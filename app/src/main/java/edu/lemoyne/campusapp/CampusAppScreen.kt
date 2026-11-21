@@ -52,7 +52,12 @@ fun CounterDemo() {
 
 //--- Class 9: Step 2: one owner for the data ---
 @Composable
-fun CampusAppScreen(modifier: Modifier = Modifier) {
+fun CampusAppScreen(
+    showcaseState: ShowcaseUIState,
+    loginState: LoginUIState,
+    onRefreshShowcase: () -> Unit,
+    onLogin: (String, String, () -> Unit) -> Unit,
+    modifier: Modifier = Modifier) {
     val movies = remember {
         mutableStateListOf(
             "Cinderella Man",
@@ -71,7 +76,9 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             onAddMovie = {movies.add(it)},
             onSeeAll = {currentScreen = "list"},
             //--- Lab 9: Task 2: an about screen
-            onAbout = { currentScreen = "about" }
+            onAbout = { currentScreen = "about" },
+            onInterestsClick = {currentScreen = "login"},
+            modifier = modifier
         )
         "list" -> ListScreen(
             movies = movies,
@@ -87,6 +94,28 @@ fun CampusAppScreen(modifier: Modifier = Modifier) {
             modifier = modifier
         )
 
+        "login" -> LoginScreen(
+            state = loginState,
+            onLogin = {email, password ->
+                onLogin(email, password) {currentScreen = "interests"}
+            },
+            modifier = modifier
+        )
+
+        "interests" -> InterestsScreen(
+            state = showcaseState,
+            onRefresh = onRefreshShowcase,
+            onBack = {currentScreen = "home"},
+            modifier = modifier
+        )
+
+        "supabase" -> InterestsScreen(
+            state = showcaseState,
+            onRefresh = onRefreshShowcase,
+            onBack = { currentScreen = "home" },
+            modifier = modifier
+        )
+
     }
 }
 
@@ -98,7 +127,9 @@ fun HomeScreen(
     onSeeAll: () -> Unit,
     //--- Lab 9: Task 2: An about screen ---
     onAbout: () -> Unit,
-    modifier: Modifier = Modifier) {
+    onInterestsClick: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     // --- Class 7: Step 3: what is typed lives in state---
     var newMovie by remember { mutableStateOf("") }
     //---Class 8: Step 2: the error message lives in state too ---
@@ -215,6 +246,10 @@ fun HomeScreen(
             onClick = onAbout
         ) {
             Text(text = "About")
+        }
+
+        Button(onClick = onInterestsClick) {
+            Text("My Interests")
         }
 
 
