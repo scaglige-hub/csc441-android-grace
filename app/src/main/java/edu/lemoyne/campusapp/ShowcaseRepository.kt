@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class ShowcaseRepository(private val api: ShowcaseAPI = ShowcaseService.api) {
+
     suspend fun loadItems(token: String): List<ShowcaseItem> =
         withContext(Dispatchers.IO) {
             api.getShowcaseItems(ShowcaseService.API_KEY, "Bearer $token")
@@ -15,5 +16,5 @@ class ShowcaseRepository(private val api: ShowcaseAPI = ShowcaseService.api) {
                 ShowcaseService.API_KEY,
                 LoginRequest(email, password)
             ).accessToken
-    }
+        }
 }

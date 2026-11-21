@@ -13,16 +13,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun InterestsScreen(
     state: ShowcaseUIState,
     onBack: () -> Unit,
+    onRefresh: () -> Unit, //Lab 21: Task 1
     modifier: Modifier = Modifier,
 ) {
     BackHandler {onBack()}
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
         TextButton(onClick = onBack) {Text("Back")}
+        TextButton(onClick = onRefresh) {
+            Text("Refresh items")
+        }
         when (state) {
             ShowcaseUIState.Loading -> Text("Loading from Supabase...")
             is ShowcaseUIState.Error -> Column {

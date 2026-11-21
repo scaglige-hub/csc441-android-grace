@@ -32,3 +32,10 @@ have to use them.
 1. After rotating, I was on the See All screen, which is what I started on.
 2. The two new items I added were not there.
 3. The difference is the use of 'remember' and 'rememberSavable'. Seemingly, rememberSavable saves the list when the screen rotates.
+
+## Week 13, Wednesday: Lab 21
+1. After you log in, it is onLogin that triggers refresh(), right before the interests page is open.
+2. I think it is the onRefresh line in InterestsScreen.
+3. ViewModel is mostly used by MainActivity, rather than the screens, but InterestsScreen still needs onRefresh, forwarded by the current screen owner.
+4. A network failure will not pull the information from Supabase, without the connection to allow it to do so. If Supabase is empty, then it would display empty.
+5. I verified by checking the same information that I added to the table was displayed in the app. 

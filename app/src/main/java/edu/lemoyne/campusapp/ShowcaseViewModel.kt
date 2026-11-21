@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 sealed class ShowcaseUIState {
-    data object Loading: ShowcaseUIState()
-    data class Success(val items: List<ShowcaseItem>): ShowcaseUIState()
+    data object Loading : ShowcaseUIState()
+    data class Success(val items: List<ShowcaseItem>) : ShowcaseUIState()
     data class Error(val message: String): ShowcaseUIState()
 }
 
-class ShowcaseViewModel: ViewModel() {
+class ShowcaseViewModel : ViewModel() {
     private val repository = ShowcaseRepository()
 
     private val _uiState = MutableStateFlow<ShowcaseUIState>(ShowcaseUIState.Loading)
@@ -24,14 +24,14 @@ class ShowcaseViewModel: ViewModel() {
     }
 
     fun refresh() {
-        val token = accessToken?: run {
+        val token = accessToken ?: run {
             _uiState.value = ShowcaseUIState.Error("Please log in first")
-            return@run
+            return
         }
         viewModelScope.launch {
             _uiState.value = ShowcaseUIState.Loading
             try {
-                val items = repository.loadItems()
+                val items = repository.loadItems(token)
                 _uiState.value = ShowcaseUIState.Success(items)
 
             } catch (error: Exception) {
